@@ -142,3 +142,19 @@
        color: #474c5c;
     font-weight: bold;
 }
+.priceValue{
+    display: flex;
+    gap: 20px;
+}
+
+.minRange p,.maxRange p{
+    font-size: 14px;
+    color: #b6b6b6;
+      background: #f3f3f3;
+    border-radius: 4px;
+    padding: 8px 10px 8px 10px;
+}
+.minRange p span,.maxRange p span{
+    color: #797c88;
+    font-weight: bold;
+}

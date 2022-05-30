@@ -9,7 +9,14 @@ export default function SideBar(){
                    <li>
                        <div className={styles.price}>
                             <p>Price</p>
-                           
+                       </div>
+                       <div className={styles.priceValue}>
+                           <div className={styles.minRange}>
+                               <p>From <span>200</span>$</p>
+                           </div>
+                           <div className={styles.maxRange}>
+                               <p>Upto <span>9000</span>$</p>
+                           </div>
                        </div>
                        <div className={styles.priceRange}>
                            <input type="range" name="" id="" />
