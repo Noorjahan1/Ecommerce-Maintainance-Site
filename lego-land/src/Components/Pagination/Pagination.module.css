@@ -24,3 +24,6 @@
     color: #a4a8bc;
     font-size: 14px;
 }
+.prev a,.next a,.number a{
+     color: #a4a8bc;
+}

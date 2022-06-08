@@ -1,13 +1,91 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./MainBody.module.css"
+import Content from "./Content"
 import card1 from "../../images/cardIem1.jpg"
 import card2 from "../../images/cardIem2.jpg"
 import card3 from "../../images/cardIem3.jpg"
 import card4 from "../../images/cardIem4.jpg"
 import card5 from "../../images/cardIem5.jpg"
 import card6 from "../../images/cardIem6.jpg"
+import Posts from "./Posts";
 import Pagination from "../Pagination/Pagination"
-export default function MainBody(){
+export default function MainBody(props){
+    const {price,theme,age,tagvisible}=props
+     const currentPost=[<Content image={[card1,card2,card3]}/>,<Content image={[card4,card5,card6]}   />,<Content image={[card4,card4,card4]}  />,<Content image={[card4,card4,card4]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card5,card5,card5]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>  ]
+    const [posts,setPosts]=useState([]);
+    const [Loading,setLoading]=useState(false)
+    const [currentPage,setCurrentPage]=useState(1)
+    const [indexOfLastPost,setIndexOfLastPost]=useState()
+    const [indexOfFirstPost,setIndexOfFirstPost]=useState()
+    const [postsPerPage]=useState(2)
+    const [currentContent,setcurrentContent]=useState(currentPost.slice(0,2))
+    const [tags,setTags]=useState({price:[],theme:{},age:{}})
+    const [display,setDisplay]=useState(true)
+    const [lazyLoad,setlazyLoad]=useState()
+    const [search,setSearch]=useState()
+    useEffect(
+        ()=>{
+            
+            setLoading(true)
+            setPosts(currentPost)
+            setLoading(false)
+            
+         
+        }
+    ,[]);
+            
+    useEffect(
+        ()=>{
+            if(tagvisible){
+               setTags({price:price?price:[],theme:theme?theme:{},age:age?age:{}})
+              props.applyFilter()
+            }
+            
+        }
+    ,[tagvisible]);
+
+    
+       useEffect(
+        ()=>{
+           setIndexOfLastPost(currentPage*postsPerPage)
+        }
+    ,[currentPage]);
+       useEffect(
+        ()=>{
+           setIndexOfFirstPost(indexOfLastPost-postsPerPage)
+        }
+    ,[indexOfLastPost]);
+       useEffect(
+        ()=>{
+             setLoading(true)
+           setcurrentContent(posts.slice(indexOfFirstPost,indexOfLastPost))
+           setLoading(false)
+        }
+    ,[indexOfLastPost,indexOfFirstPost]);
+    const paginate=(event,pageNumber)=>{
+        event.preventDefault()  
+        setCurrentPage(pageNumber)    
+        }
+    const Next=(event)=>{
+        event.preventDefault()
+        setCurrentPage((prevState)=>(prevState+1))
+        
+    }
+    const Prev=(event)=>{
+        event.preventDefault()
+        setCurrentPage((prevState)=>(prevState-1))
+    }
+    const displays=()=>{
+        setDisplay(false)
+
+    }
+    const rgex= async (event)=>{
+       await setlazyLoad(event.target.value)
+       
+    }
+    const setSear=(val)=>{
+                    setSearch(val)
+    }
     return(
         <>
         <div className={styles.main}>
@@ -22,7 +100,7 @@ export default function MainBody(){
                        <i className="fa-solid fa-magnifying-glass"></i>
                      </div>
                    
-                   <input type="text" placeholder="Search among 100+ products" />
+                   <input type="text" placeholder="Search among 100+ products" name="search" onChange={rgex} onKeyPress={(e) => e.key === 'Enter' ? setSear(lazyLoad):null} />
                  </div>
                  <div className={styles.popularText}>
                      <div className={`${styles.popular}`}>
@@ -33,139 +111,53 @@ export default function MainBody(){
                      </select>
                  </div>
            </div>
-           <div className={styles.tag}>
-               <div className={styles.tagItem}>
-                   <h3>Transport</h3>
+           <div className={styles.tag} >
+               {   tags?( 
+                  <>
+                     <div className={styles.tagItem} styles={{opacity:display?"1":"0"}} >
+                   <h3>
+                      {`Price : From ${tags.price[0]} to ${tags.price[1]}`}
+                   </h3>
+                   <i className="fa-solid fa-xmark" onClick={displays}></i>
+               </div>  
+                     {Object.keys(tags.theme).map(function(keyName, keyIndex) {
+                      if(tags.theme[keyName]===true){return  (
+    		        <div className={styles.tagItem} >
+                   <h3>
+                       {keyName}
+                   </h3>
                    <i className="fa-solid fa-xmark"></i>
                </div>
-               <div className={styles.tagItem}>
-                   <h3>Older than 12 years</h3>
+            )}
+    		
+
+		})}
+                     {Object.keys(tags.age).map(function(keyName, keyIndex) {
+                      if(tags.age[keyName]===true){return  (
+    		        <div className={styles.tagItem} >
+                   <h3>
+                       {keyName}
+                   </h3>
                    <i className="fa-solid fa-xmark"></i>
                </div>
-           </div>
-           <div className={`row ${styles.cards} pb-5`}>
-               <div className="col-lg-4">
-                   <div className={`card ${styles.carItem}`}>
-                       <div className={`${styles.image} p-5`}>
-                           <img src={card1} alt="card" />
-                       </div>
-                       <div className={`${styles.like}`}>
-                           <i className={`fa-solid fa-heart`}></i>
-                       </div>
-                       <div className={styles.carText}>
-                           <h3 className={styles.vendorCode}>Vendor Code :10521</h3>
-                           <h3 className={styles.productName}>Big blue lego jeep<br/>Collection {`<<Brutal>>`} </h3>
-                            <p className={styles.price}>Price</p>
-                            <h3 className={styles.dollar}>400 $<span className={styles.strike}>600$</span></h3>
-                       </div>
-                       <div className={styles.addToCart}>
-                           <i className="fa-solid fa-cart-shopping"></i>
-                       </div>
-                   </div>
-               </div>
-               <div className="col-lg-4">
-                      <div className={`card ${styles.carItem}`}>
-                       <div className={`${styles.image} p-5`}>
-                           <img src={card2} alt="card" />
-                       </div>
-                       <div className={`${styles.like}`}>
-                           <i className={`fa-solid fa-heart`}></i>
-                       </div>
-                       <div className={styles.carText}>
-                           <h3 className={styles.vendorCode}>Vendor Code :10521</h3>
-                           <h3 className={styles.productName}>Big blue lego jeep<br/>Collection {`<<Brutal>>`} </h3>
-                            <p className={styles.price}>Price</p>
-                            <h3 className={styles.dollar}>400 $<span className={styles.strike}>600$</span></h3>
-                       </div>
-                       <div className={styles.addToCart}>
-                           <i className="fa-solid fa-cart-shopping"></i>
-                       </div>
-                   </div>
-               </div>
-               <div className="col-lg-4">
-                      <div className={`card ${styles.carItem}`}>
-                       <div className={`${styles.image} p-5`}>
-                           <img src={card3} alt="card" />
-                       </div>
-                       <div className={`${styles.like}`}>
-                           <i className={`fa-solid fa-heart`}></i>
-                       </div>
-                       <div className={styles.carText}>
-                           <h3 className={styles.vendorCode}>Vendor Code :10521</h3>
-                           <h3 className={styles.productName}>Big blue lego jeep<br/>Collection {`<<Brutal>>`} </h3>
-                            <p className={styles.price}>Price</p>
-                            <h3 className={styles.dollar}>400 $<span className={styles.strike}>600$</span></h3>
-                       </div>
-                       <div className={styles.addToCart}>
-                           <i className="fa-solid fa-cart-shopping"></i>
-                       </div>
-                   </div>
-               </div>
+            )}
+    		
 
+		})}
+                   
+                  </>
+               
+                  ):null
+                 
+               
+                  
+               }
+               
+            
            </div>
-           <div className={`row ${styles.cards} pb-5`}>
-               <div className="col-lg-4">
-                   <div className={`card ${styles.carItem}`}>
-                       <div className={`${styles.image} p-5`}>
-                           <img src={card4} alt="card" />
-                       </div>
-                       <div className={`${styles.like}`}>
-                           <i className={`fa-solid fa-heart`}></i>
-                       </div>
-                       <div className={styles.carText}>
-                           <h3 className={styles.vendorCode}>Vendor Code :10521</h3>
-                           <h3 className={styles.productName}>Big blue lego jeep<br/>Collection {`<<Brutal>>`} </h3>
-                            <p className={styles.price}>Price</p>
-                            <h3 className={styles.dollar}>400 $<span className={styles.strike}>600$</span></h3>
-                       </div>
-                       <div className={styles.addToCart}>
-                           <i className="fa-solid fa-cart-shopping"></i>
-                       </div>
-                   </div>
-               </div>
-               <div className="col-lg-4">
-                      <div className={`card ${styles.carItem}`}>
-                       <div className={`${styles.image} p-5`}>
-                           <img src={card5} alt="card" />
-                       </div>
-                       <div className={`${styles.like}`}>
-                           <i className={`fa-solid fa-heart`}></i>
-                       </div>
-                       <div className={styles.carText}>
-                           <h3 className={styles.vendorCode}>Vendor Code :10521</h3>
-                           <h3 className={styles.productName}>Big blue lego jeep<br/>Collection {`<<Brutal>>`} </h3>
-                            <p className={styles.price}>Price</p>
-                            <h3 className={styles.dollar}>400 $<span className={styles.strike}>600$</span></h3>
-                       </div>
-                       <div className={styles.addToCart}>
-                           <i className="fa-solid fa-cart-shopping"></i>
-                       </div>
-                   </div>
-               </div>
-               <div className="col-lg-4">
-                      <div className={`card ${styles.carItem}`}>
-                       <div className={`${styles.image} p-5`}>
-                           <img src={card6} alt="card" />
-                       </div>
-                       <div className={`${styles.like}`}>
-                           <i className={`fa-solid fa-heart`}></i>
-                       </div>
-                       <div className={styles.carText}>
-                           <h3 className={styles.vendorCode}>Vendor Code :10521</h3>
-                           <h3 className={styles.productName}>Big blue lego jeep<br/>Collection {`<<Brutal>>`} </h3>
-                            <p className={styles.price}>Price</p>
-                            <h3 className={styles.dollar}>400 $<span className={styles.strike}>600$</span></h3>
-                       </div>
-                       <div className={styles.addToCart}>
-                           <i className="fa-solid fa-cart-shopping"></i>
-                       </div>
-                   </div>
-               </div>
-
+           <Posts posts={currentContent} loading={Loading} search={search} />
            </div>
-          
-        </div>
-         <Pagination/>
+         <Pagination posts={postsPerPage} totalPosts={posts.length} paginate={paginate} next={Next} prev={Prev}/>
         </>
     )
 }
