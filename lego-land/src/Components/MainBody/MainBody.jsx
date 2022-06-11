@@ -9,9 +9,12 @@ import card5 from "../../images/cardIem5.jpg"
 import card6 from "../../images/cardIem6.jpg"
 import Posts from "./Posts";
 import Pagination from "../Pagination/Pagination"
+import {Data} from "./data.js"
 export default function MainBody(props){
     const {price,theme,age,tagvisible}=props
-     const currentPost=[<Content image={[card1,card1,card1]}/>,<Content image={[card4,card5,card6]}   />,<Content image={[card4,card4,card4]}  />,<Content image={[card4,card4,card4]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card6,card6,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/> ]
+const [data,setData]=useState(Data)
+ const [search,setSearch]=useState("")
+    const currentPost=[<Content data={data}  image={[card1,card1,card1]}/>,<Content  data={data} image={[card2,card2,card2]}   />,<Content  data={data} image={[card3,card3,card3]}  />,<Content  data={data} image={[card4,card4,card4]}/>,<Content  data={data} image={[card5,card5,card5]}/>,<Content  data={data} image={[card6,card6,card6]}/>,<Content  data={data} image={[card1,card6,card6]}/>,<Content  data={data} image={[card1,card1,card6]}/>,<Content  data={data} image={[card1,card1,card1]}/>,<Content  data={data} image={[card2,card1,card1]}/>,<Content  data={data} image={[card2,card2,card1]}/>,<Content  data={data} image={[card2,card2,card2]}/> ]
     const [posts,setPosts]=useState([]);
     const [Loading,setLoading]=useState(false)
     const [currentPage,setCurrentPage]=useState(1)
@@ -19,11 +22,12 @@ export default function MainBody(props){
     const [indexOfFirstPost,setIndexOfFirstPost]=useState()
     const [postsPerPage]=useState(2)
     const [currentContent,setcurrentContent]=useState(currentPost.slice(0,2))
-    const [tags,setTags]=useState({price:[],theme:{},age:{}})
+    const [tags,setTags]=useState()
     const [display,setDisplay]=useState(true)
-    const [lazyLoad,setlazyLoad]=useState()
-    const [search,setSearch]=useState()
+   const [isSearch,setisSearch]=useState(false)
+   const [newArray,setnewArr]=useState([])
     const [start,setStart]=useState(1)
+  
     useEffect(
         ()=>{
             
@@ -34,12 +38,80 @@ export default function MainBody(props){
          
         }
     ,[]);
+           
+    useEffect(
+        ()=>{
+        if(isSearch && tags){
+            const price=tags.price
             
+             const newData= Data.filter(e=> price[0]< e.presentPrice &&  e.presentPrice<=price[1])
+               const Array=[]
+               
+               for(let i=1;i<=newData.length;i++){
+            Array.push(<Content data={newData}  image={[card1,card1,card1]}/>)
+        }
+          
+       
+          setnewArr(Array)
+        }
+        if(isSearch && search!=""){
+     const regex=new RegExp(search, 'g')
+          
+          const newData= Data.filter(e=>{
+              
+              if(regex.test(e["Vendor Code"])){
+                    return(
+                  true
+              )
+              }else if(regex.test(e.presentPrice.toString())){
+                  return true
+              }else if(regex.test(e.title)){
+                  return true
+              }
+            
+          }
+          )
+          
+           
+          const Array=[]
+         
+               for(let i=1;i<=newData.length;i++){
+            Array.push(<Content data={newData}  image={[card1,card1,card1]}/>)
+        }
+          
+       
+          setnewArr(Array)
+        }
+   
+        } 
+       
+    ,[isSearch]);
+           
+    useEffect(
+        ()=>{
+          if(newArray.length>0){
+           setcurrentContent(newArray.slice(0,2))
+           
+           setnewArr([])
+           
+          }
+        } 
+       
+    ,[newArray]);
+    useEffect(
+        ()=>{
+         setisSearch(false)
+        } 
+       
+    ,[currentContent]);
+           
+           
     useEffect(
         ()=>{
             if(tagvisible){
                setTags({price:price?price:[],theme:theme?theme:{},age:age?age:{}})
               props.applyFilter()
+              setisSearch(true)
             }
             
         }
@@ -94,12 +166,10 @@ export default function MainBody(props){
         setDisplay(false)
 
     }
-    const rgex= async (event)=>{
-       await setlazyLoad(event.target.value)
-       
-    }
-    const setSear=(val)=>{
-                    setSearch(val)
+   
+   
+    const setSear=(e)=>{
+                    setSearch(e.target.value)
     }
     return(
         <>
@@ -115,7 +185,7 @@ export default function MainBody(props){
                        <i className="fa-solid fa-magnifying-glass"></i>
                      </div>
                    
-                   <input type="text" placeholder="Search among 100+ products" name="search" onChange={rgex} onKeyPress={(e) => e.key === 'Enter' ? setSear(lazyLoad):null} />
+                   <input type="text" placeholder="Search among 100+ products" name="search" onChange={setSear} onKeyPress={(e) => e.key === 'Enter' ? setisSearch(true):null} />
                  </div>
                  <div className={styles.popularText}>
                      <div className={`${styles.popular}`}>
@@ -170,7 +240,8 @@ export default function MainBody(props){
                
             
            </div>
-           <Posts posts={currentContent} loading={Loading} search={search} />
+       
+         <Posts posts={currentContent} loading={Loading} />
            </div>
          <Pagination posts={postsPerPage} totalPosts={posts.length} paginate={paginate} next={Next} prev={Prev} Start={start} currentPage={currentPage}/>
         </>

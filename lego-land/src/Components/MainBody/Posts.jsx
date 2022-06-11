@@ -1,11 +1,7 @@
-import React,{useEffect} from "react";
+import React from "react";
 
-const Posts=({posts,loading,search})=>{
-   useEffect(
-        ()=>{
-            console.log(search)
-        },[search]
-    )
+const Posts=({posts,loading})=>{
+  
     if(loading){
         return <h2>Loading...</h2>
     }
@@ -15,8 +11,7 @@ const Posts=({posts,loading,search})=>{
     return (
         <>
 
-        {   search?
-            posts.filter(e=> console.log(Object.values(e.toString()))):
+        { 
             posts
         }
         </>

@@ -74,6 +74,8 @@ export default function SideBar(props){
   onChange={handleChange}
   valueLabelDisplay="auto"
  getAriaValueText={valuetext}
+ min={0}
+ max={1000}
   sx={
       {
           color:"#df3238",
