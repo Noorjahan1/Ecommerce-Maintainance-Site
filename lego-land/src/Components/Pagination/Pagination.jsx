@@ -1,12 +1,14 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 import styles from "./Pagination.module.css"
-export default function Pagination({posts,totalPosts,paginate,next,prev}){
+
+export default function Pagination({posts,totalPosts,paginate,next,prev,Start,currentPage}){
     let pageNumbers=[];
-     
-    for(let i=1;i<=Math.ceil(totalPosts/posts);i++){
+    const condition=Start===1?Math.ceil(totalPosts/posts):totalPosts
+    for(let i=Start;i<=condition;i++){
         pageNumbers.push(i);
        
     }
+  
     return(
         <>
         <div className={styles.pagination}>
@@ -17,7 +19,8 @@ export default function Pagination({posts,totalPosts,paginate,next,prev}){
             {pageNumbers.map((n,i)=>{
                
               return( <div className={styles.number} key={n}>
-                <a href="#" onClick={(event)=>paginate(event,n)}>{n}</a>
+
+                <a href="#" onClick={(event)=>paginate(event,n)} style={{color:n===currentPage?"red":"inherit"}} >{n}</a>
                </div>
                )}
                

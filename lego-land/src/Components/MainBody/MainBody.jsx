@@ -11,7 +11,7 @@ import Posts from "./Posts";
 import Pagination from "../Pagination/Pagination"
 export default function MainBody(props){
     const {price,theme,age,tagvisible}=props
-     const currentPost=[<Content image={[card1,card2,card3]}/>,<Content image={[card4,card5,card6]}   />,<Content image={[card4,card4,card4]}  />,<Content image={[card4,card4,card4]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card5,card5,card5]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>  ]
+     const currentPost=[<Content image={[card1,card1,card1]}/>,<Content image={[card4,card5,card6]}   />,<Content image={[card4,card4,card4]}  />,<Content image={[card4,card4,card4]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card6,card6,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/>,<Content image={[card4,card5,card6]}/> ]
     const [posts,setPosts]=useState([]);
     const [Loading,setLoading]=useState(false)
     const [currentPage,setCurrentPage]=useState(1)
@@ -23,6 +23,7 @@ export default function MainBody(props){
     const [display,setDisplay]=useState(true)
     const [lazyLoad,setlazyLoad]=useState()
     const [search,setSearch]=useState()
+    const [start,setStart]=useState(1)
     useEffect(
         ()=>{
             
@@ -47,12 +48,26 @@ export default function MainBody(props){
     
        useEffect(
         ()=>{
-           setIndexOfLastPost(currentPage*postsPerPage)
+           setIndexOfLastPost(currentPage+1)
+         let start=1
+           if(currentPage<=Math.ceil(posts.length/posts)){
+            start=1
+           }else if(currentPage>Math.ceil(posts.length/2)){
+               start=Math.ceil(posts.length/2)+1
+               
+           }
+         
+           if(currentPage!=posts.length&&currentPage>0){
+               
+            setStart(start)
+           }
         }
     ,[currentPage]);
        useEffect(
         ()=>{
-           setIndexOfFirstPost(indexOfLastPost-postsPerPage)
+           
+           
+           setIndexOfFirstPost(currentPage-1)
         }
     ,[indexOfLastPost]);
        useEffect(
@@ -157,7 +172,7 @@ export default function MainBody(props){
            </div>
            <Posts posts={currentContent} loading={Loading} search={search} />
            </div>
-         <Pagination posts={postsPerPage} totalPosts={posts.length} paginate={paginate} next={Next} prev={Prev}/>
+         <Pagination posts={postsPerPage} totalPosts={posts.length} paginate={paginate} next={Next} prev={Prev} Start={start} currentPage={currentPage}/>
         </>
     )
 }
