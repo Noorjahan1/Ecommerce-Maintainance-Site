@@ -14,6 +14,7 @@ export default function Main(){
        await setage(age)
        
     }
+    
   const applyFilter=()=>{
       setFilterApply(prevValue=>!prevValue)
     

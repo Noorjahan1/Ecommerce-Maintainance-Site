@@ -1,21 +1,42 @@
-import React,{useState} from "react";
+import React,{useState,useContext} from "react";
 import styles from "./SideBar.module.css"
 import Slider from '@mui/material/Slider';
-function valuetext(number) {
+import { DataContext } from '../Context/Context';
+function valuetext(number:number) {
   return `${number}°C`;
 }
+  interface Tags{
+    price:number[],
+    theme:string[],
+    Age:string[]
+  }
 
-export default function SideBar(props){
+export default function SideBar(){
+ const Tags=useContext(DataContext);
   const [value, setValue] = React.useState([20, 37]);
+  const [tags,setTags]=useState<Tags>({price:[],theme:[],Age:[]})
   const [theme,setTheme]=useState({space:false,ninja:false,transport:false,building:false,homes:false})
-  const [age,setAge]=useState({})
-  const handleChange = async ( Event, number ) => {
+  const [age,setAge]=useState({"Up to a year":false,"1year-2years":false,"3 years -5 years":false,"6 years -5 years":false,"Older than 12 years":false})
+  
+  const handleChange = async ( Event:any, number:any ) => {
     await setValue(number);
+    await setTags((prevValue)=>({...prevValue,price:[...value]}))
      
 
   };
- const changeTheme=async(event)=>{
+ const changeTheme=async(event:any)=>{
      const {name,checked}=event.target;
+     if(checked){
+        setTags(
+            (prevValue)=>({
+                ...prevValue,
+                theme:prevValue.theme.length===0?[name]:[...prevValue.theme,name]
+            })
+            
+        )
+     }
+        
+     
      await setTheme(preValue=>{
          
          return (
@@ -28,28 +49,34 @@ export default function SideBar(props){
      
 
  }
- const changeAge=(event)=>{
+ const changeAge=(event:any)=>{
     const {name,checked}=event.target
-    setAge((prevValue)=>{
-        return (
-        {
-        ...prevValue,
-        [name]:checked
-        }
-        )
-        }
+    if(checked){
+        setTags((prevValue)=>({...prevValue,Age:prevValue.Age.length===0?[name]:[...prevValue.Age,name]}))
+    }
+    setAge((prevValue:any)=>{
+            return {
+                ...prevValue,
+                [name]:checked
+
+            }
+         })
+ 
+      
+   
         
-        )
+        
  }
  const reset= async ()=>{
      await setValue([0,0]);
      await setTheme({space:false,ninja:false,transport:false,building:false,homes:false})
-     await setAge({})
+     await setAge({"Up to a year":false,"1year-2years":false,"3 years -5 years":false,"6 years -5 years":false,"Older than 12 years":false})
      await applyFilter()
  }
  const applyFilter=()=>{
-         props.settingPrice(value,theme,age);
-         props.applyFilter()
+         
+         Tags.filterApply(tags)
+         
  }
     return(
         <>
@@ -91,7 +118,7 @@ export default function SideBar(props){
                    <li>
                        <div className={styles.Theme}>
                            <p>Theme</p>
-                           <i class="fa-solid fa-angle-up"></i>
+                           <i className="fa-solid fa-angle-up"></i>
                        </div>
                        <div className={styles.themeBody}>
                              <label htmlFor="space" className={styles.cont}>
@@ -124,16 +151,17 @@ export default function SideBar(props){
                    <li >
                        <div className={styles.age}>
                            <p>Age</p>
-                           <i class="fa-solid fa-angle-up"></i>
+                           <i className="fa-solid fa-angle-up"></i>
                        </div>
                        <div className={styles.checkAge}>
                             <label htmlFor="year" className={styles.cont}>
+                               
                             <input type="checkbox" id="year" checked={age["Up to a year"]} name="Up to a year" onChange={changeAge}/>
                             <span>Up to a year</span>
                            <span className={styles.checkmark}></span>
                             </label>
                             <label htmlFor="year1" className={styles.cont}>
-                            <input type="checkbox" id="year1" checked={age["1year-2years"]} name="1year-2years" onChange={changeAge} />
+                            <input type="checkbox" id="year1" checked={ age["1year-2years"]} name="1year-2years" onChange={changeAge} />
                             <span>1 year-2 years</span>
                            <span className={styles.checkmark}></span>
                             </label>
@@ -143,7 +171,7 @@ export default function SideBar(props){
                            <span className={styles.checkmark}></span>
                             </label>
                             <label htmlFor="year3" className={styles.cont}>
-                            <input type="checkbox" id="year3"  checked={age["6 years -5 years"]}    name="6 years -5 years" onChange={changeAge}/>
+                            <input type="checkbox" id="year3"  checked={ age["6 years -5 years"] }    name="6 years -5 years" onChange={changeAge}/>
                             <span>6 years-5 years</span>
                            <span className={styles.checkmark}></span>
                             </label>
@@ -172,7 +200,7 @@ export default function SideBar(props){
                    <li >
                        <div className={styles.applyFilter}>
                            <button onClick={applyFilter}>Apply Filter</button>
-                           <i class="fa-solid fa-trash-can" onClick={reset}></i>
+                           <i className="fa-solid fa-trash-can" onClick={reset}></i>
                        </div>
                    
                    </li>
