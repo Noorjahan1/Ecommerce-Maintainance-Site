@@ -1,4 +1,4 @@
-# RedDotDigitalInternship
+# E-commerce Site 
 1. git clone https://github.com/Noorjahan1/RedDotDigitalInternship.git
 2. cd RedDotDigitalInternship
 3. git checkout -b typescriptProjectUpdate
