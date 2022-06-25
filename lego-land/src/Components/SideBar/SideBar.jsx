@@ -45,6 +45,7 @@ export default function SideBar(props){
      await setValue([0,0]);
      await setTheme({space:false,ninja:false,transport:false,building:false,homes:false})
      await setAge({})
+     await applyFilter()
  }
  const applyFilter=()=>{
          props.settingPrice(value,theme,age);
